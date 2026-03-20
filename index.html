@@ -104,9 +104,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
 /* ── Table ── */
 .tbl-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead th{text-align:left;padding:10px 12px;border-bottom:1.5px solid var(--border);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f8fafc;white-space:nowrap}
-td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+thead th{text-align:left;padding:10px 12px;border-bottom:1.5px solid var(--border);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f8fafc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#f8faff}
 tr.hl td{background:#fffbeb!important;transition:background 1.2s}
@@ -246,7 +246,7 @@ tr.hl td{background:#fffbeb!important;transition:background 1.2s}
     <div class="hero-row">
       <div>
         <h1 id="heroTitle">Department Management</h1>
-      
+       
       </div>
     </div>
   </div>
@@ -288,16 +288,25 @@ tr.hl td{background:#fffbeb!important;transition:background 1.2s}
           </div>
         </div>
         <div class="tbl-wrap">
-          <table>
+          <table style="table-layout:fixed;min-width:unset">
+            <colgroup>
+              <col style="width:48px">
+              <col style="width:130px">
+              <col>
+              <col style="width:120px">
+              <col style="width:110px">
+              <col style="width:110px">
+              <col style="width:105px">
+            </colgroup>
             <thead>
               <tr>
-                <th style="width:50px">#</th>
-                <th style="width:130px">Department ID</th>
+                <th>#</th>
+                <th>Department ID</th>
                 <th>Department Name</th>
-                <th style="width:105px">Captured Date</th>
-                <th style="width:95px">Captured Time</th>
-                <th style="width:95px">Captured By</th>
-                <th style="width:100px">Actions</th>
+                <th>Captured Date</th>
+                <th>Captured Time</th>
+                <th>Captured By</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="dTbody"></tbody>
