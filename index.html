@@ -104,9 +104,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
 /* ── Table ── */
 .tbl-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
-thead th{text-align:left;padding:10px 12px;border-bottom:1.5px solid var(--border);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f8fafc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:auto}
+thead th{text-align:left;padding:10px 14px;border-bottom:1.5px solid var(--border);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f8fafc;white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#f8faff}
 tr.hl td{background:#fffbeb!important;transition:background 1.2s}
@@ -201,7 +201,7 @@ tr.hl td{background:#fffbeb!important;transition:background 1.2s}
 }
 @media(max-width:480px){
   .search-wrap input{width:120px}
-  table{min-width:480px}
+  table{min-width:620px}
 }
 </style>
 </head>
@@ -245,8 +245,8 @@ tr.hl td{background:#fffbeb!important;transition:background 1.2s}
     </div>
     <div class="hero-row">
       <div>
-        <h1 id="heroTitle">Department Management</h1>
-       
+        <h1 id="heroTitle">SS Department Management</h1>
+        
       </div>
     </div>
   </div>
@@ -288,15 +288,15 @@ tr.hl td{background:#fffbeb!important;transition:background 1.2s}
           </div>
         </div>
         <div class="tbl-wrap">
-          <table style="table-layout:fixed;min-width:unset">
+          <table>
             <colgroup>
-              <col style="width:48px">
+              <col style="width:44px">
               <col style="width:130px">
               <col>
               <col style="width:120px">
+              <col style="width:115px">
               <col style="width:110px">
-              <col style="width:110px">
-              <col style="width:105px">
+              <col style="width:108px">
             </colgroup>
             <thead>
               <tr>
