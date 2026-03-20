@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SS Departments & Bible Classes — VCMIS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1f44;--blue:#1a56db;--blue2:#1e40af;--cyan:#0ea5e9;
+  --bg:#f8fafc;--white:#ffffff;--border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--text2:#334155;--muted:#64748b;--dim:#94a3b8;
+  --green:#059669;--green-lt:#ecfdf5;--green-dk:#065f46;
+  --red:#dc2626;--red-lt:#fef2f2;--red-dk:#991b1b;
+  --amber:#d97706;--amber-lt:#fffbeb;--amber-dk:#92400e;
+  --purple:#7c3aed;--purple-lt:#f5f3ff;--purple-dk:#4c1d95;
+  --r:8px;--r-lg:12px;--r-xl:18px;
+  --sh:0 1px 3px rgba(0,0,0,.06),0 1px 8px rgba(0,0,0,.04);
+  --sh-lg:0 4px 20px rgba(0,0,0,.08);
+  --sh-xl:0 8px 36px rgba(0,0,0,.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── Topbar ── */
+.topbar{background:#fff;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04);position:sticky;top:0;z-index:50}
+.tb-brand{display:flex;align-items:center;gap:10px}
+.tb-logo{width:32px;height:32px;border-radius:8px;background:#f8fafc;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px}
+.tb-name{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.tb-name span{color:var(--muted);font-weight:400}
+.tb-nav{display:flex;align-items:center;gap:2px}
+.tb-nav a{font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;padding:6px 12px;border-radius:var(--r);transition:all .15s}
+.tb-nav a:hover{background:#f1f5f9;color:var(--text)}
+.tb-nav a.active{background:#f1f5f9;color:var(--text)}
+.tb-right{display:flex;align-items:center;gap:12px}
+.tb-sep{width:1px;height:20px;background:var(--border)}
+.tb-user{display:flex;align-items:center;gap:8px;color:var(--text2);font-size:13px;cursor:pointer}
+.tb-avatar{width:30px;height:30px;border-radius:50%;background:#e2e8f0;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text2)}
+
+/* ── Page tabs (sub-navigation) ── */
+.page-tabs{background:#fff;border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;gap:0}
+.ptab{font-size:13px;font-weight:500;color:var(--muted);padding:13px 18px;border-bottom:2.5px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none}
+.ptab:hover{color:var(--text)}
+.ptab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+
+/* ── Hero ── */
+.hero{background:#fff;padding:20px 0 0;border-bottom:1px solid var(--border)}
+.hero-inner{max-width:1100px;margin:0 auto;padding:0 20px 20px}
+.breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;margin-bottom:10px;flex-wrap:wrap}
+.breadcrumb a{color:var(--muted);text-decoration:none;transition:color .15s}
+.breadcrumb a:hover{color:var(--blue)}
+.breadcrumb .sep{color:var(--border2)}
+.breadcrumb .cur{color:var(--text2);font-weight:500}
+.hero-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hero h1{font-size:clamp(18px,3vw,22px);font-weight:700;color:var(--text);letter-spacing:-.02em;margin-bottom:4px}
+.hero p{font-size:13px;color:var(--muted);line-height:1.55;max-width:520px}
+
+/* ── Layout ── */
+.wrap{max-width:1100px;margin:0 auto;padding:24px 20px 80px}
+.panel{display:none}.panel.active{display:block}
+
+/* ── Stat cards ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.stats{grid-template-columns:1fr}}
+.scard{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;box-shadow:var(--sh);border-left:3px solid transparent}
+.scard.blue{border-left-color:var(--blue)}
+.scard.green{border-left-color:var(--green)}
+.scard.amber{border-left-color:var(--amber)}
+.scard.purple{border-left-color:var(--purple)}
+.scard.slate{border-left-color:#94a3b8}
+.scard-lbl{font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.scard-val{font-size:24px;font-weight:700;color:var(--text)}
+.scard.green .scard-val{color:var(--green-dk)}
+.scard.amber .scard-val{color:var(--amber-dk)}
+.scard.purple .scard-val{color:var(--purple-dk)}
+.scard.slate .scard-val{color:var(--muted)}
+
+/* ── Main card ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-xl);box-shadow:var(--sh-xl);overflow:hidden}
+.card-body{padding:20px 24px 24px}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.card-title{font-size:15px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+.tb-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search-wrap{display:flex;align-items:center;border:1.5px solid var(--border2);border-radius:var(--r);overflow:hidden;background:var(--white);transition:border-color .2s}
+.search-wrap:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.08)}
+.search-wrap svg{margin:0 8px;color:var(--dim);flex-shrink:0}
+.search-wrap input{border:none;outline:none;background:transparent;padding:8px 8px 8px 0;font-size:13px;color:var(--text);width:200px;font-family:'Inter',sans-serif}
+.search-wrap input::placeholder{color:var(--dim)}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r);border:1.5px solid var(--border2);background:var(--white);font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
+.btn:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 3px 10px rgba(26,86,219,.25)}
+.btn.primary:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 5px 16px rgba(26,86,219,.35)}
+.btn.primary:active{transform:none}
+.btn.danger{background:var(--red-dk);border-color:var(--red-dk);color:#fff}
+.btn.danger:hover{background:#7f1d1d}
+.btn.secondary{color:var(--muted)}
+.btn.icon-only{padding:8px 10px}
+
+/* ── Table ── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{text-align:left;padding:10px 12px;border-bottom:1.5px solid var(--border);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f8fafc;white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8faff}
+tr.hl td{background:#fffbeb!important;transition:background 1.2s}
+
+/* ── ID pill ── */
+.tid{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--blue);background:#eff6ff;padding:2px 8px;border-radius:5px;border:1px solid #bfdbfe;display:inline-block;cursor:pointer}
+.tid.purple{color:var(--purple);background:var(--purple-lt);border-color:#ddd6fe}
+
+.tname{font-weight:600;color:var(--text)}
+.row-info{font-size:11px;color:var(--dim);margin-top:12px}
+
+/* ── Action buttons ── */
+.act-btns{display:flex;gap:5px}
+.act-btn{width:30px;height:30px;border-radius:var(--r);border:1.5px solid var(--border2);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all .15s;flex-shrink:0}
+.act-btn:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.act-btn.edit:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff}
+.act-btn.del:hover{border-color:var(--red);color:var(--red);background:var(--red-lt)}
+
+/* ── Empty state ── */
+.empty{padding:52px 24px;text-align:center;color:var(--dim)}
+.empty-icon{font-size:38px;margin-bottom:12px;opacity:.35}
+.empty p{font-size:14px;margin-bottom:8px}
+
+/* ── Modal overlay ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:200;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.overlay.show{display:flex}
+.modal{background:var(--white);border-radius:var(--r-xl);box-shadow:0 24px 60px rgba(0,0,0,.18);width:100%;overflow:hidden;animation:popIn .22s cubic-bezier(.34,1.3,.64,1)}
+.modal.wide{max-width:520px}
+.modal.sm{max-width:420px}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(6px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border)}
+.modal-hd h3{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.modal-hd h3 svg{color:var(--blue)}
+.modal-x{background:none;border:none;cursor:pointer;color:var(--dim);font-size:20px;line-height:1;padding:2px 4px;border-radius:4px;transition:all .15s}
+.modal-x:hover{color:var(--text);background:#f1f5f9}
+.modal-body{padding:22px;max-height:70vh;overflow-y:auto}
+.modal-ft{display:flex;justify-content:flex-end;gap:8px;padding:16px 22px;border-top:1px solid var(--border);background:#f8fafc}
+.del-overlay .modal-hd{background:var(--red-lt);border-bottom-color:#fecaca}
+.del-overlay .modal-hd h3{color:var(--red-dk)}
+.del-overlay .modal-hd h3 svg{color:var(--red)}
+
+/* ── Form ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
+.field{margin-bottom:0}.field.full{grid-column:1/-1}
+.flbl{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px}
+.flbl .req{color:var(--red);margin-left:2px}
+.finput{width:100%;padding:10px 13px;border:1.5px solid var(--border2);border-radius:var(--r);font-size:13px;color:var(--text);background:var(--white);outline:none;font-family:'Inter',sans-serif;transition:border-color .2s,box-shadow .2s}
+.finput:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.1)}
+.finput.err{border-color:var(--red)}
+.finput:disabled{background:#f1f5f9;color:var(--muted);cursor:not-allowed}
+.fsec{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:14px 0 10px;border-bottom:1px solid var(--border);margin-bottom:14px;grid-column:1/-1}
+.fhint{font-size:11px;color:var(--dim);margin-top:4px}
+.ferr{font-size:11px;color:var(--red);margin-top:4px;display:none}
+.ferr.show{display:block}
+
+/* ── Delete confirm ── */
+.del-box{background:var(--red-lt);border:1px solid #fecaca;border-radius:var(--r);padding:12px 14px;margin:10px 0}
+.del-box strong{display:block;font-size:14px;color:var(--red-dk);margin-bottom:2px}
+.del-box span{font-size:11px;color:#b91c1c}
+
+/* ── Detail view ── */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.detail-cell{background:var(--white);padding:12px 16px}
+.detail-cell.full{grid-column:1/-1}
+.dlbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:4px}
+.dval{font-size:13px;font-weight:500;color:var(--text);word-break:break-word}
+.dval.mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+.dval.empty{color:var(--dim);font-style:italic;font-weight:400}
+
+/* ── Toast ── */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:11px 16px;border-radius:var(--r-lg);font-size:13px;font-weight:500;color:#fff;box-shadow:var(--sh-lg);pointer-events:auto;animation:toastIn .3s ease;display:flex;align-items:center;gap:8px;max-width:340px}
+.toast.success{background:#065f46;border:1px solid var(--green)}
+.toast.danger{background:#7f1d1d;border:1px solid var(--red)}
+.toast.warning{background:#78350f;border:1px solid var(--amber)}
+.toast.info{background:#1e3a8a;border:1px solid var(--blue)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:slideUp .4s ease both}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .topbar{padding:0 16px}
+  .tb-nav{display:none}
+  .page-tabs{padding:0 16px;overflow-x:auto}
+  .hero-inner{padding:0 16px 16px}
+  .wrap{padding:16px 16px 60px}
+  .card-body{padding:16px}
+  .search-wrap input{width:150px}
+  .stats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .search-wrap input{width:120px}
+  table{min-width:480px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Topbar ── -->
+<div class="topbar">
+  <div class="tb-brand">
+    <div class="tb-logo">⛪</div>
+    <div class="tb-name">VCMIS <span>Member Portal</span></div>
+  </div>
+  <div class="tb-nav">
+    <a href="#">Dashboard</a>
+    <a href="#">Members</a>
+    <a href="#" class="active">Settings</a>
+  </div>
+  <div class="tb-right">
+    <div class="tb-sep"></div>
+    <div class="tb-user">
+      <div class="tb-avatar">AD</div>
+      <span>Admin</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--dim)"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ── Page sub-tabs ── -->
+<div class="page-tabs">
+  <div class="ptab active" id="tab-dept" onclick="switchTab('dept')">🏛 Departments</div>
+  <div class="ptab" id="tab-bcc" onclick="switchTab('bcc')">📚 Bible Class Codes</div>
+</div>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">
+      <a href="#">Home</a><span class="sep">/</span>
+      <a href="#">Settings</a><span class="sep">/</span>
+      <a href="#">Sunday School</a><span class="sep">/</span>
+      <span class="cur" id="breadCur">Departments</span>
+    </div>
+    <div class="hero-row">
+      <div>
+        <h1 id="heroTitle">Department Management</h1>
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main content ── -->
+<div class="wrap">
+
+  <!-- ════════════════════════════════════════
+       PANEL: DEPARTMENTS
+  ════════════════════════════════════════ -->
+  <div id="panel-dept" class="panel active">
+    <div class="stats anim">
+      <div class="scard blue"><div class="scard-lbl">Total Departments</div><div class="scard-val" id="dStat0">0</div></div>
+      <div class="scard green"><div class="scard-lbl">Min. ID</div><div class="scard-val" id="dStat1">—</div></div>
+      <div class="scard amber"><div class="scard-lbl">Max. ID</div><div class="scard-val" id="dStat2">—</div></div>
+      <div class="scard slate"><div class="scard-lbl">Last Added</div><div class="scard-val" style="font-size:14px;padding-top:4px" id="dStat3">—</div></div>
+    </div>
+
+    <div class="card anim" style="animation-delay:.05s">
+      <div class="card-body">
+        <div class="toolbar">
+          <div class="card-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Department list
+          </div>
+          <div class="tb-controls">
+            <div class="search-wrap">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" id="dSearch" placeholder="Search ID or name…" oninput="dFilter()">
+            </div>
+            <button class="btn primary" onclick="dOpenAdd()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add department
+            </button>
+            <button class="btn icon-only" title="Refresh" onclick="dReload()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:50px">#</th>
+                <th style="width:130px">Department ID</th>
+                <th>Department Name</th>
+                <th style="width:105px">Captured Date</th>
+                <th style="width:95px">Captured Time</th>
+                <th style="width:95px">Captured By</th>
+                <th style="width:100px">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="dTbody"></tbody>
+          </table>
+        </div>
+        <div class="row-info" id="dRowInfo"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       PANEL: BIBLE CLASS CODES
+  ════════════════════════════════════════ -->
+  <div id="panel-bcc" class="panel">
+    <div class="stats anim">
+      <div class="scard blue"><div class="scard-lbl">Total Classes</div><div class="scard-val" id="bStat0">0</div></div>
+      <div class="scard green"><div class="scard-lbl">English Classes</div><div class="scard-val" id="bStat1">0</div></div>
+      <div class="scard amber"><div class="scard-lbl">New Convert</div><div class="scard-val" id="bStat2">0</div></div>
+      <div class="scard purple"><div class="scard-lbl">Twi Classes</div><div class="scard-val" id="bStat3">0</div></div>
+    </div>
+
+    <div class="card anim" style="animation-delay:.05s">
+      <div class="card-body">
+        <div class="toolbar">
+          <div class="card-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue)"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Bible Class Code list
+          </div>
+          <div class="tb-controls">
+            <div class="search-wrap">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" id="bSearch" placeholder="Search code or class…" oninput="bFilter()">
+            </div>
+            <button class="btn primary" onclick="bOpenAdd()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add class
+            </button>
+            <button class="btn icon-only" title="Refresh" onclick="bReload()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:50px">#</th>
+                <th style="width:120px">Class Code</th>
+                <th>Class Name</th>
+                <th style="width:105px">Captured Date</th>
+                <th style="width:95px">Captured By</th>
+                <th style="width:100px">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="bTbody"></tbody>
+          </table>
+        </div>
+        <div class="row-info" id="bRowInfo"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+
+<!-- ══════════════════════════════════════════════════
+     DEPT — ADD / EDIT MODAL
+══════════════════════════════════════════════════ -->
+<div class="overlay" id="dFormOverlay">
+  <div class="modal wide">
+    <div class="modal-hd">
+      <h3>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <span id="dModalTitle">Add Department</span>
+      </h3>
+      <button class="modal-x" onclick="dCloseForm()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="dOrigID">
+      <div class="form-grid">
+        <div class="fsec">Department Details</div>
+        <div class="field">
+          <label class="flbl">Department ID <span class="req">*</span></label>
+          <input type="number" class="finput" id="dInpID" placeholder="e.g. 5" min="0">
+          <div class="fhint">Unique numeric identifier.</div>
+          <div class="ferr" id="eDeptID">Department ID is required.</div>
+        </div>
+        <div class="field">
+          <label class="flbl">Department Name <span class="req">*</span></label>
+          <input type="text" class="finput" id="dInpName" placeholder="e.g. Youth" maxlength="30">
+          <div class="fhint">Max 30 characters.</div>
+          <div class="ferr" id="eDeptName">Department name is required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn secondary" onclick="dCloseForm()">Cancel</button>
+      <button class="btn primary" onclick="dSave()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        <span id="dSaveTxt">Save department</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DEPT — VIEW MODAL -->
+<div class="overlay" id="dViewOverlay">
+  <div class="modal wide">
+    <div class="modal-hd">
+      <h3>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Department Details
+      </h3>
+      <button class="modal-x" onclick="dCloseView()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0">
+      <div class="detail-grid" id="dDetailGrid"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn secondary" onclick="dCloseView()">Close</button>
+      <button class="btn primary" onclick="dEditFromView()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit this record
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DEPT — DELETE MODAL -->
+<div class="overlay del-overlay" id="dDelOverlay">
+  <div class="modal sm">
+    <div class="modal-hd">
+      <h3>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Delete Department
+      </h3>
+      <button class="modal-x" onclick="dCloseDel()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="dDelID">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:4px">You are about to permanently delete:</p>
+      <div class="del-box">
+        <strong id="dDelName">—</strong>
+        <span>This action cannot be undone.</span>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn secondary" onclick="dCloseDel()">Cancel</button>
+      <button class="btn danger" onclick="dConfirmDel()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Delete permanently
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     BCC — ADD / EDIT MODAL
+══════════════════════════════════════════════════ -->
+<div class="overlay" id="bFormOverlay">
+  <div class="modal wide">
+    <div class="modal-hd">
+      <h3>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <span id="bModalTitle">Add Bible Class</span>
+      </h3>
+      <button class="modal-x" onclick="bCloseForm()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="bOrigCode">
+      <div class="form-grid">
+        <div class="fsec">Class Details</div>
+        <div class="field">
+          <label class="flbl">Class Code <span class="req">*</span></label>
+          <input type="text" class="finput" id="bInpCode" placeholder="e.g. EC6" maxlength="5"
+            style="text-transform:uppercase;font-family:'JetBrains Mono',monospace" oninput="this.value=this.value.toUpperCase()">
+          <div class="fhint">Up to 5 characters. Must be unique.</div>
+          <div class="ferr" id="eBccCode">Class code is required.</div>
+        </div>
+        <div class="field">
+          <label class="flbl">Class Name <span class="req">*</span></label>
+          <input type="text" class="finput" id="bInpName" placeholder="e.g. English Class 6" maxlength="50">
+          <div class="fhint">Full descriptive name. Max 50 characters.</div>
+          <div class="ferr" id="eBccName">Class name is required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn secondary" onclick="bCloseForm()">Cancel</button>
+      <button class="btn primary" onclick="bSave()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        <span id="bSaveTxt">Save class</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- BCC — VIEW MODAL -->
+<div class="overlay" id="bViewOverlay">
+  <div class="modal wide">
+    <div class="modal-hd">
+      <h3>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Bible Class Details
+      </h3>
+      <button class="modal-x" onclick="bCloseView()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0">
+      <div class="detail-grid" id="bDetailGrid"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn secondary" onclick="bCloseView()">Close</button>
+      <button class="btn primary" onclick="bEditFromView()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit this record
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- BCC — DELETE MODAL -->
+<div class="overlay del-overlay" id="bDelOverlay">
+  <div class="modal sm">
+    <div class="modal-hd">
+      <h3>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Delete Bible Class
+      </h3>
+      <button class="modal-x" onclick="bCloseDel()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="bDelCode">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:4px">You are about to permanently delete:</p>
+      <div class="del-box">
+        <strong id="bDelName">—</strong>
+        <span>This action cannot be undone.</span>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn secondary" onclick="bCloseDel()">Cancel</button>
+      <button class="btn danger" onclick="bConfirmDel()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Delete permanently
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ══════════════════════════════════════════════
+   SHARED HELPERS
+══════════════════════════════════════════════ */
+function nowDate(){ return new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+function nowTime(){ return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:true}).toUpperCase(); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function hlRow(id){
+  setTimeout(()=>{
+    const r=document.getElementById('row-'+id);
+    if(!r)return;r.classList.add('hl');
+    r.scrollIntoView({behavior:'smooth',block:'nearest'});
+    setTimeout(()=>r.classList.remove('hl'),2500);
+  },220);
+}
+
+/* ── Toast ── */
+function showToast(msg,type='success'){
+  const icons={
+    success:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+    danger:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    warning:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>',
+    info:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+  };
+  const w=document.getElementById('toastWrap');
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  t.innerHTML=(icons[type]||'')+esc(msg);
+  w.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(8px)';t.style.transition='.3s';setTimeout(()=>t.remove(),300);},3200);
+}
+
+/* ── Tab switcher ── */
+function switchTab(tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='dept'){
+    document.getElementById('breadCur').textContent='Departments';
+    document.getElementById('heroTitle').textContent='SS Department Management';
+    document.getElementById('heroDesc').textContent='Manage Sunday School departments. Add, edit, view and remove department records.';
+  } else {
+    document.getElementById('breadCur').textContent='Bible Class Codes';
+    document.getElementById('heroTitle').textContent='Bible Class Code Management';
+    document.getElementById('heroDesc').textContent='Manage Bible class codes and their full class names for Sunday School.';
+  }
+}
+
+/* ── Backdrop closes ── */
+['dFormOverlay','dViewOverlay','dDelOverlay','bFormOverlay','bViewOverlay','bDelOverlay'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('click',e=>{if(e.target===el) el.classList.remove('show');});
+});
+
+/* ══════════════════════════════════════════════
+   DATA — DEPARTMENTS
+══════════════════════════════════════════════ */
+let dRows=[
+  {id:0,name:'Adult',       capturedDate:'18 Mar 2026',capturedTime:'08:00 AM',capturedBy:'admin'},
+  {id:1,name:'Archive',     capturedDate:'18 Mar 2026',capturedTime:'08:05 AM',capturedBy:'admin'},
+  {id:2,name:'Children',    capturedDate:'18 Mar 2026',capturedTime:'08:10 AM',capturedBy:'admin'},
+  {id:3,name:'Overseas',    capturedDate:'18 Mar 2026',capturedTime:'08:15 AM',capturedBy:'admin'},
+  {id:4,name:'New Convert', capturedDate:'18 Mar 2026',capturedTime:'08:20 AM',capturedBy:'admin'},
+];
+let dViewingID=null;
+
+function dUpdateStats(){
+  const ids=dRows.map(r=>r.id);
+  document.getElementById('dStat0').textContent=dRows.length;
+  document.getElementById('dStat1').textContent=dRows.length?Math.min(...ids):'—';
+  document.getElementById('dStat2').textContent=dRows.length?Math.max(...ids):'—';
+  document.getElementById('dStat3').textContent=dRows.length?dRows[dRows.length-1].name:'—';
+}
+
+function dRender(data){
+  const tb=document.getElementById('dTbody');
+  const ri=document.getElementById('dRowInfo');
+  ri.textContent='Showing '+data.length+' of '+dRows.length+' records';
+  if(!data.length){
+    tb.innerHTML=`<tr><td colspan="7"><div class="empty"><div class="empty-icon">🏛</div><p>No departments found.</p><button class="btn primary" style="margin-top:8px" onclick="dOpenAdd()">Add first department</button></div></td></tr>`;
+    return;
+  }
+  tb.innerHTML=data.map((r,i)=>`
+    <tr id="row-dept-${r.id}">
+      <td style="color:var(--dim);font-size:12px">${i+1}</td>
+      <td><span class="tid" onclick="dOpenView(${r.id})" title="View details">${esc(r.id)}</span></td>
+      <td><span class="tname">${esc(r.name)}</span></td>
+      <td><span style="font-size:12px;color:var(--text2)">${esc(r.capturedDate)}</span></td>
+      <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2)">${esc(r.capturedTime||'—')}</span></td>
+      <td><span style="font-size:12px;font-weight:500;color:var(--text2)">${esc(r.capturedBy)}</span></td>
+      <td>
+        <div class="act-btns">
+          <button class="act-btn" title="View" onclick="dOpenView(${r.id})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="act-btn edit" title="Edit" onclick="dOpenEdit(${r.id})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="act-btn del" title="Delete" onclick="dOpenDel(${r.id})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function dFilter(){
+  const q=document.getElementById('dSearch').value.toLowerCase().trim();
+  dRender(dRows.filter(r=>!q||String(r.id).includes(q)||r.name.toLowerCase().includes(q)));
+}
+function dReload(){document.getElementById('dSearch').value='';dRender(dRows);showToast('Table refreshed','info');}
+
+/* ── Dept Add ── */
+function dOpenAdd(){
+  document.getElementById('dOrigID').value='';
+  document.getElementById('dInpID').value='';document.getElementById('dInpID').disabled=false;
+  document.getElementById('dInpName').value='';
+  document.getElementById('dModalTitle').textContent='Add Department';
+  document.getElementById('dSaveTxt').textContent='Save department';
+  dClearErrors();
+  document.getElementById('dFormOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('dInpID').focus(),80);
+}
+
+/* ── Dept Edit ── */
+function dOpenEdit(id){
+  const r=dRows.find(x=>x.id===id);if(!r)return;
+  document.getElementById('dOrigID').value=id;
+  document.getElementById('dInpID').value=r.id;document.getElementById('dInpID').disabled=true;
+  document.getElementById('dInpName').value=r.name;
+  document.getElementById('dModalTitle').textContent='Edit Department — ID '+r.id;
+  document.getElementById('dSaveTxt').textContent='Update department';
+  dClearErrors();dCloseView();
+  document.getElementById('dFormOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('dInpName').focus(),80);
+}
+function dCloseForm(){document.getElementById('dFormOverlay').classList.remove('show');}
+
+function dClearErrors(){
+  ['DeptID','DeptName'].forEach(k=>{
+    const e=document.getElementById('e'+k);const f=document.getElementById('dInp'+(k==='DeptID'?'ID':'Name'));
+    if(e)e.classList.remove('show');if(f)f.classList.remove('err');
+  });
+}
+
+function dSave(){
+  let ok=true;
+  const idVal=document.getElementById('dInpID').value.trim();
+  const nameVal=document.getElementById('dInpName').value.trim();
+  if(idVal===''||isNaN(Number(idVal))){
+    document.getElementById('dInpID').classList.add('err');
+    document.getElementById('eDeptID').textContent='A valid numeric ID is required.';
+    document.getElementById('eDeptID').classList.add('show');ok=false;
+  }
+  if(!nameVal){
+    document.getElementById('dInpName').classList.add('err');
+    document.getElementById('eDeptName').classList.add('show');ok=false;
+  }
+  if(!ok)return;
+  const isEdit=!!document.getElementById('dOrigID').value;
+  if(!isEdit){
+    const nid=Number(idVal);
+    if(dRows.find(x=>x.id===nid)){showToast('Department ID '+nid+' already exists.','warning');return;}
+    dRows.push({id:nid,name:nameVal,capturedDate:nowDate(),capturedTime:nowTime(),capturedBy:'admin'});
+    showToast('"'+nameVal+'" added successfully.');
+    dCloseForm();dFilter();dUpdateStats();
+    setTimeout(()=>hlRow('dept-'+nid),100);
+  } else {
+    const oid=Number(document.getElementById('dOrigID').value);
+    const r=dRows.find(x=>x.id===oid);
+    if(r)r.name=nameVal;
+    showToast('"'+nameVal+'" updated.');
+    dCloseForm();dFilter();dUpdateStats();
+    setTimeout(()=>hlRow('dept-'+oid),100);
+  }
+}
+
+/* ── Dept View ── */
+function dOpenView(id){
+  const r=dRows.find(x=>x.id===id);if(!r)return;
+  dViewingID=id;
+  document.getElementById('dDetailGrid').innerHTML=`
+    <div class="detail-cell"><div class="dlbl">Department ID</div><div class="dval mono">${esc(r.id)}</div></div>
+    <div class="detail-cell"><div class="dlbl">Captured By</div><div class="dval">${esc(r.capturedBy)}</div></div>
+    <div class="detail-cell full"><div class="dlbl">Department Name</div><div class="dval">${esc(r.name)}</div></div>
+    <div class="detail-cell"><div class="dlbl">Captured Date</div><div class="dval">${esc(r.capturedDate)}</div></div>
+    <div class="detail-cell"><div class="dlbl">Captured Time</div><div class="dval mono">${esc(r.capturedTime||'—')}</div></div>
+  `;
+  document.getElementById('dViewOverlay').classList.add('show');
+}
+function dCloseView(){document.getElementById('dViewOverlay').classList.remove('show');}
+function dEditFromView(){dCloseView();if(dViewingID!==null)dOpenEdit(dViewingID);}
+
+/* ── Dept Delete ── */
+function dOpenDel(id){
+  const r=dRows.find(x=>x.id===id);if(!r)return;
+  document.getElementById('dDelID').value=id;
+  document.getElementById('dDelName').textContent='ID '+r.id+' — '+r.name;
+  document.getElementById('dDelOverlay').classList.add('show');
+}
+function dCloseDel(){document.getElementById('dDelOverlay').classList.remove('show');}
+function dConfirmDel(){
+  const id=Number(document.getElementById('dDelID').value);
+  const r=dRows.find(x=>x.id===id);
+  const name=r?r.name:'ID '+id;
+  dRows=dRows.filter(x=>x.id!==id);
+  dCloseDel();dFilter();dUpdateStats();
+  showToast('"'+name+'" permanently deleted.','danger');
+}
+
+
+/* ══════════════════════════════════════════════
+   DATA — BIBLE CLASS CODES
+══════════════════════════════════════════════ */
+let bRows=[
+  {code:'EC1',name:'English Class 1',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'EC2',name:'English Class 2',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'EC3',name:'English Class 3',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'EC4',name:'English Class 4',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'EC5',name:'English Class 5',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'GA', name:"Gideon's Army",  capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'JG', name:"Joshua's Generation",capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'NC1',name:'New Convert Class 1',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'NC2',name:'New Convert Class 2',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'NC3',name:'New Convert Class 3',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'NC4',name:'New Convert Class 4',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'NC5',name:'New Convert Class 5',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'NC6',name:'New Convert Class 6',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'NC7',name:'New Convert Class 7',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'NC8',name:'New Convert Class 8',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'NC9',name:'New Convert Class 9',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'TC1',name:'Twi Class 1',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'TC2',name:'Twi Class 2',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'TC3',name:'Twi Class 3',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'TC4',name:'Twi Class 4',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+  {code:'TC5',name:'Twi Class 5',capturedDate:'18 Mar 2026',capturedBy:'admin'},
+];
+let bViewingCode=null;
+
+function bUpdateStats(){
+  document.getElementById('bStat0').textContent=bRows.length;
+  document.getElementById('bStat1').textContent=bRows.filter(r=>r.code.startsWith('EC')).length;
+  document.getElementById('bStat2').textContent=bRows.filter(r=>r.code.startsWith('NC')).length;
+  document.getElementById('bStat3').textContent=bRows.filter(r=>r.code.startsWith('TC')).length;
+}
+
+function bRender(data){
+  const tb=document.getElementById('bTbody');
+  const ri=document.getElementById('bRowInfo');
+  ri.textContent='Showing '+data.length+' of '+bRows.length+' records';
+  if(!data.length){
+    tb.innerHTML=`<tr><td colspan="6"><div class="empty"><div class="empty-icon">📚</div><p>No bible class codes found.</p><button class="btn primary" style="margin-top:8px" onclick="bOpenAdd()">Add first class</button></div></td></tr>`;
+    return;
+  }
+  tb.innerHTML=data.map((r,i)=>`
+    <tr id="row-bcc-${r.code}">
+      <td style="color:var(--dim);font-size:12px">${i+1}</td>
+      <td><span class="tid purple" onclick="bOpenView('${esc(r.code)}')" title="View details">${esc(r.code)}</span></td>
+      <td><span class="tname">${esc(r.name)}</span></td>
+      <td><span style="font-size:12px;color:var(--text2)">${esc(r.capturedDate)}</span></td>
+      <td><span style="font-size:12px;font-weight:500;color:var(--text2)">${esc(r.capturedBy)}</span></td>
+      <td>
+        <div class="act-btns">
+          <button class="act-btn" title="View" onclick="bOpenView('${esc(r.code)}')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="act-btn edit" title="Edit" onclick="bOpenEdit('${esc(r.code)}')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="act-btn del" title="Delete" onclick="bOpenDel('${esc(r.code)}')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function bFilter(){
+  const q=document.getElementById('bSearch').value.toLowerCase().trim();
+  bRender(bRows.filter(r=>!q||r.code.toLowerCase().includes(q)||r.name.toLowerCase().includes(q)));
+}
+function bReload(){document.getElementById('bSearch').value='';bRender(bRows);showToast('Table refreshed','info');}
+
+/* ── BCC Add ── */
+function bOpenAdd(){
+  document.getElementById('bOrigCode').value='';
+  document.getElementById('bInpCode').value='';document.getElementById('bInpCode').disabled=false;
+  document.getElementById('bInpName').value='';
+  document.getElementById('bModalTitle').textContent='Add Bible Class';
+  document.getElementById('bSaveTxt').textContent='Save class';
+  bClearErrors();
+  document.getElementById('bFormOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('bInpCode').focus(),80);
+}
+
+/* ── BCC Edit ── */
+function bOpenEdit(code){
+  const r=bRows.find(x=>x.code===code);if(!r)return;
+  document.getElementById('bOrigCode').value=code;
+  document.getElementById('bInpCode').value=r.code;document.getElementById('bInpCode').disabled=true;
+  document.getElementById('bInpName').value=r.name;
+  document.getElementById('bModalTitle').textContent='Edit Bible Class — '+r.code;
+  document.getElementById('bSaveTxt').textContent='Update class';
+  bClearErrors();bCloseView();
+  document.getElementById('bFormOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('bInpName').focus(),80);
+}
+function bCloseForm(){document.getElementById('bFormOverlay').classList.remove('show');}
+
+function bClearErrors(){
+  document.getElementById('bInpCode').classList.remove('err');document.getElementById('eBccCode').classList.remove('show');
+  document.getElementById('bInpName').classList.remove('err');document.getElementById('eBccName').classList.remove('show');
+}
+
+function bSave(){
+  let ok=true;
+  const codeVal=document.getElementById('bInpCode').value.trim().toUpperCase();
+  const nameVal=document.getElementById('bInpName').value.trim();
+  if(!codeVal||codeVal.length>5){
+    document.getElementById('bInpCode').classList.add('err');
+    document.getElementById('eBccCode').textContent=codeVal.length>5?'Code must be ≤ 5 characters.':'Class code is required.';
+    document.getElementById('eBccCode').classList.add('show');ok=false;
+  }
+  if(!nameVal){
+    document.getElementById('bInpName').classList.add('err');
+    document.getElementById('eBccName').classList.add('show');ok=false;
+  }
+  if(!ok)return;
+  const isEdit=!!document.getElementById('bOrigCode').value;
+  if(!isEdit){
+    if(bRows.find(x=>x.code===codeVal)){showToast('Class code "'+codeVal+'" already exists.','warning');return;}
+    bRows.push({code:codeVal,name:nameVal,capturedDate:nowDate(),capturedBy:'admin'});
+    showToast('"'+nameVal+'" added successfully.');
+    bCloseForm();bFilter();bUpdateStats();
+    setTimeout(()=>hlRow('bcc-'+codeVal),100);
+  } else {
+    const orig=document.getElementById('bOrigCode').value;
+    const r=bRows.find(x=>x.code===orig);
+    if(r)r.name=nameVal;
+    showToast('"'+nameVal+'" updated.');
+    bCloseForm();bFilter();bUpdateStats();
+    setTimeout(()=>hlRow('bcc-'+orig),100);
+  }
+}
+
+/* ── BCC View ── */
+function bOpenView(code){
+  const r=bRows.find(x=>x.code===code);if(!r)return;
+  bViewingCode=code;
+  document.getElementById('bDetailGrid').innerHTML=`
+    <div class="detail-cell"><div class="dlbl">Class Code</div><div class="dval mono">${esc(r.code)}</div></div>
+    <div class="detail-cell"><div class="dlbl">Captured By</div><div class="dval">${esc(r.capturedBy)}</div></div>
+    <div class="detail-cell full"><div class="dlbl">Class Name</div><div class="dval">${esc(r.name)}</div></div>
+    <div class="detail-cell full"><div class="dlbl">Captured Date</div><div class="dval">${esc(r.capturedDate)}</div></div>
+  `;
+  document.getElementById('bViewOverlay').classList.add('show');
+}
+function bCloseView(){document.getElementById('bViewOverlay').classList.remove('show');}
+function bEditFromView(){bCloseView();if(bViewingCode)bOpenEdit(bViewingCode);}
+
+/* ── BCC Delete ── */
+function bOpenDel(code){
+  const r=bRows.find(x=>x.code===code);if(!r)return;
+  document.getElementById('bDelCode').value=code;
+  document.getElementById('bDelName').textContent=r.code+' — '+r.name;
+  document.getElementById('bDelOverlay').classList.add('show');
+}
+function bCloseDel(){document.getElementById('bDelOverlay').classList.remove('show');}
+function bConfirmDel(){
+  const code=document.getElementById('bDelCode').value;
+  const r=bRows.find(x=>x.code===code);
+  const name=r?r.name:code;
+  bRows=bRows.filter(x=>x.code!==code);
+  bCloseDel();bFilter();bUpdateStats();
+  showToast('"'+name+'" permanently deleted.','danger');
+}
+
+/* ── Init ── */
+dRender(dRows);dUpdateStats();
+bRender(bRows);bUpdateStats();
+</script>
+</body>
+</html>
